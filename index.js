@@ -2,10 +2,12 @@
 
 var phoneBook = require('./phoneBook');
 
+
 // Добавляем записи
 phoneBook.add('Сергей', '7 999 6667778', 'gs@example.com');
 phoneBook.add('Сергей 2', '999 4433444', 'gs@example.com');
 phoneBook.add('Олег', '+7 (999) 777-7-777', 'just7@yandex-team.ru');
+
 
 // Невалидные данные не должны попадать в книгу!
 phoneBook.add('Честный Хрюндель', 'invalid phone', 'honest-hrundel');
@@ -18,6 +20,7 @@ phoneBook.find('777');
 phoneBook.remove('Олег');
 // Выводит количество удалённых контактов, которые удовлетворят запросу:
 // Удален 1 контакт
+
 
 // Выводит записи в виде красивой таблички
 phoneBook.showTable();
