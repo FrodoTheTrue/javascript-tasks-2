@@ -7,10 +7,9 @@ var phoneBook = []; // Здесь вы храните записи как хот
  */
 module.exports.add = function add(name, phone, email) {
     var regexpPhone = /^((\+\d+|\d+)[\- ]?)?(\(\d{3}\)[\- ]?|\d{3}[\- ]?)[\d\- ]{7,10}$/;
-    var regexpEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Zа-яА-Я0-9-]+(\.[a-zA-Zа-яА-Я0-9-.]+)+$/;
-    if (regexpPhone.test(phone) && regexpEmail.test(email)) {
-        var member =
-        {
+    var regexpEmail = /^[a-z0-9_-]+@[a-zа-я0-9-ё]+(\.([a-zа-я0-9-ё])+)+$/i;
+        if (regexpPhone.test(phone) && regexpEmail.test(email)) {
+        var member = {
             name: name,
             phone: phone,
             email: email
@@ -28,32 +27,28 @@ module.exports.add = function add(name, phone, email) {
  */
 module.exports.find = function find(query) {
     for (var i = 0; i < phoneBook.length; i++) {
-        var regexpSearch = new RegExp(query);
-        var bookKeys = Object.keys(phoneBook[i]);
         for (var el in phoneBook[i]) {
-            if (phoneBook[i][el].indexOf(query) + 1) {
-                console.log([
-                    phoneBook[i].name,
-                    phoneBook[i].phone,
-                    phoneBook[i].email
-                ].join(', '));
-                break;
+            if (phoneBook[i].hasOwnProperty(el)) {
+                if (phoneBook[i][el].indexOf(query) + 1) {
+                    console.log([
+                        phoneBook[i].name,
+                        phoneBook[i].phone,
+                        phoneBook[i].email
+                    ].join(', '));
+                    break;
+                }
             }
-
         }
-
     }
-
 };
 
 /*
  Функция удаления записи в телефонной книге.
  */
 module.exports.remove = function remove(query) {
-    for (var i = 0; i < phoneBook.length; i++)
-    {
+    for (var i = 0; i < phoneBook.length; i++) {
         if (phoneBook[i].name.indexOf(query) > -1 || phoneBook[i].phone.indexOf(query) > -1 || phoneBook[i].email.indexOf(query) > -1)
-            phoneBook.slice(0,i).concat(phoneBook.slice(i + 1));
+            phoneBook.splice(i,1);
     }
 };
 
@@ -61,12 +56,11 @@ module.exports.remove = function remove(query) {
  Функция импорта записей из файла (задача со звёздочкой!).
  */
 module.exports.importFromCsv = function importFromCsv(filename) {
-    var data = require('fs').readFileSync(filename, 'utf-8');
-    var stringsVCS= data.split('\n');
-    var params = [];
-    for (var i = 0;i < stringsVCS.length;i++)
+    var data = require('fs').readFileSync(filename, 'utf-8').split(/\n|\r|\r\n/g);
+    var params;
+    for (var i = 0;i < data.length;i++)
     {
-        params = stringsVCS[i].split(';');
+        params = data[i].split(';');
         module.exports.add(params[0], params[1], params[2]);
     }
 };
